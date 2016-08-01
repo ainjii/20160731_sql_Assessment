@@ -1,0 +1,74 @@
+SQL [8]> select * from models
+... [8]> order by name
+... [8]> limit 10
+... [8]> offset 15;
+
+  id   | year  | brand_name |   name   
+-------+-------+------------+----------
+    27 |  1962 | Chevrolet  | Corvette 
+    19 |  1960 | Chevrolet  | Corvette 
+    25 |  1961 | Chevrolet  | Corvette 
+    37 |  1963 | Chevrolet  | Corvette 
+    16 |  1959 | Chevrolet  | Corvette 
+     9 |  1956 | Chevrolet  | Corvette 
+    10 |  1957 | Chevrolet  | Corvette 
+     5 |  1954 | Chevrolet  | Corvette 
+    33 |  1963 | Ford       | E-Series 
+    20 |  1960 | Fillmore   | Fillmore 
+(10 rows)
+
+
+=========================================================
+
+SQL [9]> select models.name, models.brand_name, brands.founded
+... [9]> from models
+... [9]> left join brands
+... [9]> on models.brand_name = brands.name
+... [9]> where models.year = 1960
+... [9]> group by models.name, brand_name, founded;
+
+   name   | brand_name | founded 
+----------+------------+---------
+ Corvette | Chevrolet  |    1911 
+ Rockette | Fairthorpe |    1954 
+ Corvair  | Chevrolet  |    1911 
+ Fillmore | Fillmore   |         
+(4 rows)
+
+=========================================================
+
+SQL [13]> SELECT b.name,
+... [13]>          m.name,
+... [13]>          m.year,
+... [13]>          b.discontinued,
+... [13]>          (b.discontinued - m.year) as years_until_brand_discontinued
+... [13]>   FROM models AS m
+... [13]>     LEFT JOIN brands AS b
+... [13]>       ON m.brand_name = b.name
+... [13]>   WHERE b.discontinued IS NOT NULL
+... [13]>   ORDER BY b.name, m.name, m.year;
+
+
+    name    |       name       | year  | discontinued | years_until_brand_discontinued 
+------------+------------------+-------+--------------+--------------------------------
+ Austin     | Mini             |  1959 |         1987 |                             28 
+ Austin     | Mini             |  1963 |         1987 |                             24 
+ Austin     | Mini Cooper      |  1961 |         1987 |                             26 
+ Austin     | Mini Cooper      |  1964 |         1987 |                             23 
+ Austin     | Mini Cooper S    |  1963 |         1987 |                             24 
+ Fairthorpe | Rockette         |  1960 |         1976 |                             16 
+ Hillman    | Minx Magnificent |  1950 |         1981 |                             31 
+ Plymouth   | Fury             |  1964 |         2001 |                             37 
+ Pontiac    | Bonneville       |  1964 |         2010 |                             46 
+ Pontiac    | Grand Prix       |  1962 |         2010 |                             48 
+ Pontiac    | Grand Prix       |  1963 |         2010 |                             47 
+ Pontiac    | Grand Prix       |  1964 |         2010 |                             46 
+ Pontiac    | GTO              |  1964 |         2010 |                             46 
+ Pontiac    | LeMans           |  1964 |         2010 |                             46 
+ Pontiac    | Tempest          |  1961 |         2010 |                             49 
+ Rambler    | Classic          |  1963 |         1969 |                              6 
+ Studebaker | Avanti           |  1961 |         1967 |                              6 
+ Studebaker | Avanti           |  1962 |         1967 |                              5 
+ Studebaker | Avanti           |  1963 |         1967 |                              4 
+ Studebaker | Avanti           |  1964 |         1967 |                              3 
+(20 rows)
